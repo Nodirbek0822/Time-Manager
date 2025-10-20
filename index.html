@@ -525,12 +525,12 @@
             placeholder="Yangi vazifa qo'shing..."
             required
           />
-          <!-- <select class="priority-select" id="prioritySelect">
+          <select class="priority-select" id="prioritySelect">
             <option value="low">Past</option>
             <option value="medium">O'rta</option>
 
             <option value="high">Yuqori</option>
-          </select> -->
+          </select>
           <select class="duration-select" id="durationSelect">
             <option value="15">15 daqiqa</option>
             <option value="25">25 daqiqa</option>
@@ -782,17 +782,17 @@
               taskItem.classList.add("completed");
             }
 
-            // const priorityText = {
-            //   high: "Yuqori",
-            //   medium: "O'rta",
-            //   low: "Past",
-            // };
+            const priorityText = {
+              high: "Yuqori",
+              medium: "O'rta",
+              low: "Past",
+            };
 
-            // const priorityClass = {
-            //   high: "priority-high",
-            //   medium: "priority-medium",
-            //   low: "priority-low",
-            // };
+            const priorityClass = {
+              high: "priority-high",
+              medium: "priority-medium",
+              low: "priority-low",
+            };
 
             taskItem.innerHTML = `
                         <input type="checkbox" class="task-checkbox" ${
