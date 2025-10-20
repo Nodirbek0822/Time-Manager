@@ -525,12 +525,12 @@
             placeholder="Yangi vazifa qo'shing..."
             required
           />
-          <select class="priority-select" id="prioritySelect">
+          <!-- <select class="priority-select" id="prioritySelect">
             <option value="low">Past</option>
             <option value="medium">O'rta</option>
 
             <option value="high">Yuqori</option>
-          </select>
+          </select> -->
           <select class="duration-select" id="durationSelect">
             <option value="15">15 daqiqa</option>
             <option value="25">25 daqiqa</option>
@@ -597,7 +597,7 @@
     <script>
       // O'zgaruvchilar
       let timerInterval;
-      let timerSeconds = 25 * 60; // 25 daqiqa
+      let timerSeconds = 60 * 60; // 25 daqiqa  <!-- bu yerni oʻzgartirdim -->
       let timerRunning = false;
       let workdayStartTime = null;
       let workdayEndTime = null;
@@ -647,7 +647,7 @@
           .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
         // Progress barni yangilash
-        const totalSeconds = 25 * 60; // 25 daqiqa
+        const totalSeconds = 60 * 60; // 25 daqiqa <!-- bu yerni oʻzgartirdim -->
         const progress = ((totalSeconds - timerSeconds) / totalSeconds) * 100;
         document.getElementById("timerProgress").style.width = `${progress}%`;
       }
@@ -689,7 +689,7 @@
       // Taymerni qayta o'rnatish
       function resetTimer() {
         clearInterval(timerInterval);
-        timerSeconds = 25 * 60;
+        timerSeconds = 60 * 60;
         timerRunning = false;
         document.getElementById("startTimer").disabled = false;
         document.getElementById("pauseTimer").disabled = true;
@@ -782,17 +782,17 @@
               taskItem.classList.add("completed");
             }
 
-            const priorityText = {
-              high: "Yuqori",
-              medium: "O'rta",
-              low: "Past",
-            };
+            // const priorityText = {
+            //   high: "Yuqori",
+            //   medium: "O'rta",
+            //   low: "Past",
+            // };
 
-            const priorityClass = {
-              high: "priority-high",
-              medium: "priority-medium",
-              low: "priority-low",
-            };
+            // const priorityClass = {
+            //   high: "priority-high",
+            //   medium: "priority-medium",
+            //   low: "priority-low",
+            // };
 
             taskItem.innerHTML = `
                         <input type="checkbox" class="task-checkbox" ${
