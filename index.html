@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VTime Manager</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      :root {
+        --primary: #4361ee;
+        --secondary: #3a0ca3;
+        --accent: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #4cc9f0;
+        --warning: #f8961e;
+        --danger: #e63946;
+        --time-bg: #7209b7;
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: var(--dark);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      header {
+        background: var(--primary);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+      }
+
+      .date-display {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .save-status {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 70vh;
+      }
+
+      .dashboard {
+        display: flex;
+        padding: 20px;
+        background-color: var(--light);
+        border-bottom: 1px solid #ddd;
+        gap: 20px;
+      }
+
+      .time-section {
+        flex: 1;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .time-display {
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        color: var(--time-bg);
+        margin: 10px 0;
+      }
+
+      .time-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .time-btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--primary);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .time-btn:hover {
+        background-color: var(--secondary);
+      }
+
+      .timer-section {
+        flex: 1;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .timer-display {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 10px 0;
+        color: var(--accent);
+      }
+
+      .timer-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .timer-btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--accent);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .timer-btn:hover {
+        background-color: #b5179e;
+      }
+
+      .timer-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .input-section {
+        padding: 20px;
+        background-color: var(--light);
+        border-bottom: 1px solid #ddd;
+      }
+
+      .task-form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .task-input {
+        flex: 2;
+        padding: 12px 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        min-width: 200px;
+      }
+
+      .task-input:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .priority-select,
+      .duration-select {
+        padding: 12px 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: white;
+        cursor: pointer;
+        min-width: 120px;
+      }
+
+      .add-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .add-btn:hover {
+        background-color: var(--secondary);
+        transform: translateY(-2px);
+      }
+
+      .tasks-section {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .task-list {
+        list-style-type: none;
+      }
+
+      .task-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        margin-bottom: 10px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        border-left: 4px solid var(--primary);
+      }
+
+      .task-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .task-item.high {
+        border-left-color: var(--danger);
+      }
+
+      .task-item.medium {
+        border-left-color: var(--warning);
+      }
+
+      .task-item.low {
+        border-left-color: var(--success);
+      }
+
+      .task-checkbox {
+        margin-right: 15px;
+        transform: scale(1.2);
+        cursor: pointer;
+      }
+
+      .task-text {
+        flex: 1;
+        font-size: 1.1rem;
+      }
+
+      .task-text.completed {
+        text-decoration: line-through;
+        color: #888;
+      }
+
+      .task-details {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-right: 15px;
+      }
+
+      .task-priority,
+      .task-duration {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      .priority-high {
+        background-color: rgba(230, 57, 70, 0.1);
+        color: var(--danger);
+      }
+
+      .priority-medium {
+        background-color: rgba(248, 150, 30, 0.1);
+        color: var(--warning);
+      }
+
+      .priority-low {
+        background-color: rgba(76, 201, 240, 0.1);
+        color: var(--success);
+      }
+
+      .duration-badge {
+        background-color: rgba(114, 9, 183, 0.1);
+        color: var(--time-bg);
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: #888;
+        transition: all 0.3s;
+      }
+
+      .action-btn:hover {
+        color: var(--dark);
+      }
+
+      .delete-btn:hover {
+        color: var(--danger);
+      }
+
+      .timer-btn-task {
+        color: var(--accent);
+      }
+
+      .timer-btn-task:hover {
+        color: #b5179e;
+      }
+
+      .stats-section {
+        display: flex;
+        justify-content: space-around;
+        padding: 15px;
+        background-color: var(--light);
+        border-top: 1px solid #ddd;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary);
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #888;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: #ddd;
+      }
+
+      .progress-bar {
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        margin-top: 10px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background-color: var(--success);
+        width: 0%;
+        transition: width 0.5s;
+      }
+
+      .data-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px;
+        background-color: var(--light);
+        border-top: 1px solid #ddd;
+      }
+
+      .data-btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--warning);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .data-btn:hover {
+        background-color: #e07c00;
+      }
+
+      .auto-save-indicator {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: var(--success);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .auto-save-indicator.show {
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard {
+          flex-direction: column;
+        }
+
+        .task-form {
+          flex-direction: column;
+        }
+
+        .task-item {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .task-details {
+          margin-top: 10px;
+          align-self: flex-start;
+        }
+
+        .task-actions {
+          align-self: flex-end;
+          margin-top: 10px;
+        }
+
+        .save-status {
+          position: static;
+          justify-content: center;
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><i class="fas fa-clock"></i> Vaqt Boshqaruvli Kundalik Reja</h1>
+        <div class="date-display" id="currentDate">
+          2023 yil 11 noyabr, payshanba
+        </div>
+        <div class="save-status">
+          <span class="auto-save-indicator" id="autoSaveIndicator">
+            <i class="fas fa-check"></i> Avtomatik saqlandi
+          </span>
+        </div>
+      </header>
+
+      <div class="dashboard">
+        <div class="time-section">
+          <h3><i class="far fa-clock"></i> Joriy Vaqt</h3>
+          <div class="time-display" id="currentTime">00:00:00</div>
+          <div class="time-controls">
+            <button class="time-btn" id="startWorkday">
+              Ish kuni boshlanishi
+            </button>
+            <button class="time-btn" id="endWorkday">Ish kuni tugashi</button>
+          </div>
+        </div>
+
+        <div class="timer-section">
+          <h3><i class="fas fa-hourglass-half"></i> Vazifa Taymeri</h3>
+          <div class="timer-display" id="timerDisplay">25:00</div>
+          <div class="timer-controls">
+            <button class="timer-btn" id="startTimer">Boshlash</button>
+            <button class="timer-btn" id="pauseTimer" disabled>
+              To'xtatish
+            </button>
+            <button class="timer-btn" id="resetTimer">Qayta o'rnatish</button>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="timerProgress"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <form class="task-form" id="taskForm">
+          <input
+            type="text"
+            class="task-input"
+            id="taskInput"
+            placeholder="Yangi vazifa qo'shing..."
+            required
+          />
+          <select class="priority-select" id="prioritySelect">
+            <option value="low">Past</option>
+            <option value="medium">O'rta</option>
+            <option value="high">Yuqori</option>
+          </select>
+          <select class="duration-select" id="durationSelect">
+            <option value="15">15 daqiqa</option>
+            <option value="25">25 daqiqa</option>
+            <option value="45">45 daqiqa</option>
+            <option value="60">1 soat</option>
+            <option value="90">1.5 soat</option>
+            <option value="120">2 soat</option>
+          </select>
+          <button type="submit" class="add-btn">
+            <i class="fas fa-plus"></i> Qo'shish
+          </button>
+        </form>
+      </div>
+
+      <div class="tasks-section">
+        <h2 class="section-title">
+          <i class="fas fa-list-check"></i> Mening Vazifalarim
+        </h2>
+
+        <ul class="task-list" id="taskList">
+          <!-- Vazifalar JavaScript orqali yuklanadi -->
+        </ul>
+
+        <div class="empty-state" id="emptyState">
+          <i class="fas fa-tasks"></i>
+          <h3>Hozircha vazifalar yo'q</h3>
+          <p>Yuqoridagi forma orqali birinchi vazifangizni qo'shing</p>
+        </div>
+      </div>
+
+      <div class="data-controls">
+        <button class="data-btn" id="exportDataBtn">
+          <i class="fas fa-file-export"></i> Eksport qilish
+        </button>
+        <button class="data-btn" id="importDataBtn">
+          <i class="fas fa-file-import"></i> Import qilish
+        </button>
+        <button class="data-btn" id="clearDataBtn">
+          <i class="fas fa-trash"></i> Barchasini O'chirish
+        </button>
+      </div>
+
+      <div class="stats-section">
+        <div class="stat-item">
+          <div class="stat-value" id="totalTasks">0</div>
+          <div class="stat-label">Jami Vazifa</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="completedTasks">0</div>
+          <div class="stat-label">Bajarilgan</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="totalTime">0</div>
+          <div class="stat-label">Jami Vaqt (daq)</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="productivityScore">0%</div>
+          <div class="stat-label">Samaradorlik</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // O'zgaruvchilar
+      let timerInterval;
+      let timerSeconds = 25 * 60; // 25 daqiqa
+      let timerRunning = false;
+      let workdayStartTime = null;
+      let workdayEndTime = null;
+      let tasks = [];
+      let autoSaveTimeout = null;
+
+      // Ma'lumotlarni saqlash kaliti
+      const STORAGE_KEY = "dailyPlannerData";
+
+      // Dastur yuklanganda ma'lumotlarni yuklash
+      document.addEventListener("DOMContentLoaded", function () {
+        loadData();
+        updateDateTime();
+        updateTimerDisplay();
+        renderTasks();
+        updateStats();
+
+        // Sahifa yopilayotganda oxirgi marta saqlash
+        window.addEventListener("beforeunload", autoSaveData);
+      });
+
+      // Joriy sanani ko'rsatish
+      function updateDateTime() {
+        const now = new Date();
+
+        // Sana
+        const dateOptions = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          weekday: "long",
+        };
+        const dateString = now.toLocaleDateString("uz-UZ", dateOptions);
+        document.getElementById("currentDate").textContent = dateString;
+
+        // Vaqt
+        const timeString = now.toLocaleTimeString("uz-UZ");
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      // Taymerni yangilash
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timerSeconds / 60);
+        const seconds = timerSeconds % 60;
+        document.getElementById("timerDisplay").textContent = `${minutes
+          .toString()
+          .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+        // Progress barni yangilash
+        const totalSeconds = 25 * 60; // 25 daqiqa
+        const progress = ((totalSeconds - timerSeconds) / totalSeconds) * 100;
+        document.getElementById("timerProgress").style.width = `${progress}%`;
+      }
+
+      // Taymerni boshlash
+      function startTimer() {
+        if (timerRunning) return;
+
+        timerRunning = true;
+        document.getElementById("startTimer").disabled = true;
+        document.getElementById("pauseTimer").disabled = false;
+
+        timerInterval = setInterval(() => {
+          timerSeconds--;
+          updateTimerDisplay();
+
+          if (timerSeconds <= 0) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            document.getElementById("startTimer").disabled = false;
+            document.getElementById("pauseTimer").disabled = true;
+
+            // Taymer tugaganda xabar
+            alert("Vaqt tugadi! Vazifa bajarildi.");
+          }
+        }, 1000);
+      }
+
+      // Taymerni to'xtatish
+      function pauseTimer() {
+        if (!timerRunning) return;
+
+        clearInterval(timerInterval);
+        timerRunning = false;
+        document.getElementById("startTimer").disabled = false;
+        document.getElementById("pauseTimer").disabled = true;
+      }
+
+      // Taymerni qayta o'rnatish
+      function resetTimer() {
+        clearInterval(timerInterval);
+        timerSeconds = 25 * 60;
+        timerRunning = false;
+        document.getElementById("startTimer").disabled = false;
+        document.getElementById("pauseTimer").disabled = true;
+        updateTimerDisplay();
+      }
+
+      // Avtomatik saqlash
+      function autoSaveData() {
+        const data = {
+          tasks: tasks,
+          workdayStartTime: workdayStartTime,
+          workdayEndTime: workdayEndTime,
+          lastSaved: new Date().toISOString(),
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+        // Saqlash indikatorini ko'rsatish
+        showSaveIndicator();
+      }
+
+      // Kechiktirilgan avtomatik saqlash
+      function scheduleAutoSave() {
+        // Avvalgi timeoutni tozalash
+        if (autoSaveTimeout) {
+          clearTimeout(autoSaveTimeout);
+        }
+
+        // Yangi timeout o'rnatish
+        autoSaveTimeout = setTimeout(autoSaveData, 1000);
+      }
+
+      // Saqlash indikatorini ko'rsatish
+      function showSaveIndicator() {
+        const indicator = document.getElementById("autoSaveIndicator");
+        indicator.classList.add("show");
+
+        setTimeout(() => {
+          indicator.classList.remove("show");
+        }, 2000);
+      }
+
+      // Vazifa qo'shish
+      document
+        .getElementById("taskForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const taskInput = document.getElementById("taskInput");
+          const prioritySelect = document.getElementById("prioritySelect");
+          const durationSelect = document.getElementById("durationSelect");
+
+          if (taskInput.value.trim() === "") return;
+
+          // Yangi vazifa yaratish
+          const newTask = {
+            id: Date.now(), // Unique ID
+            text: taskInput.value,
+            priority: prioritySelect.value,
+            duration: parseInt(durationSelect.value),
+            completed: false,
+            createdAt: new Date().toISOString(),
+          };
+
+          tasks.push(newTask);
+
+          // UI ni yangilash
+          renderTasks();
+          updateStats();
+          scheduleAutoSave(); // Avtomatik saqlash
+
+          // Inputni tozalash
+          taskInput.value = "";
+        });
+
+      // Vazifalarni ekranga chiqarish
+      function renderTasks() {
+        const taskList = document.getElementById("taskList");
+        const emptyState = document.getElementById("emptyState");
+
+        // Agar vazifalar bo'lsa
+        if (tasks.length > 0) {
+          emptyState.style.display = "none";
+          taskList.innerHTML = "";
+
+          tasks.forEach((task) => {
+            const taskItem = document.createElement("li");
+            taskItem.className = `task-item ${task.priority}`;
+            if (task.completed) {
+              taskItem.classList.add("completed");
+            }
+
+            const priorityText = {
+              high: "Yuqori",
+              medium: "O'rta",
+              low: "Past",
+            };
+
+            const priorityClass = {
+              high: "priority-high",
+              medium: "priority-medium",
+              low: "priority-low",
+            };
+
+            taskItem.innerHTML = `
+                        <input type="checkbox" class="task-checkbox" ${
+                          task.completed ? "checked" : ""
+                        }>
+                        <span class="task-text ${
+                          task.completed ? "completed" : ""
+                        }">${task.text}</span>
+                        <div class="task-details">
+                            <span class="task-priority ${
+                              priorityClass[task.priority]
+                            }">${priorityText[task.priority]}</span>
+                            <span class="task-duration duration-badge">${
+                              task.duration
+                            } daqiqa</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn timer-btn-task" title="Taymerni ishga tushurish"><i class="fas fa-play-circle"></i></button>
+                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+
+            taskList.appendChild(taskItem);
+
+            // Event listener qo'shish
+            addTaskEventListeners(taskItem, task.id, task.duration);
+          });
+        } else {
+          // Vazifalar bo'lmasa
+          taskList.innerHTML = "";
+          emptyState.style.display = "block";
+        }
+      }
+
+      // Vazifa uchun event listener qo'shish
+      function addTaskEventListeners(taskItem, taskId, duration) {
+        const checkbox = taskItem.querySelector(".task-checkbox");
+        const taskText = taskItem.querySelector(".task-text");
+        const deleteBtn = taskItem.querySelector(".delete-btn");
+        const editBtn = taskItem.querySelector(".edit-btn");
+        const timerBtn = taskItem.querySelector(".timer-btn-task");
+
+        checkbox.addEventListener("change", function () {
+          // Vazifani yangilash
+          const taskIndex = tasks.findIndex((task) => task.id === taskId);
+          if (taskIndex !== -1) {
+            tasks[taskIndex].completed = this.checked;
+            taskText.classList.toggle("completed", this.checked);
+            updateStats();
+            scheduleAutoSave(); // Avtomatik saqlash
+          }
+        });
+
+        deleteBtn.addEventListener("click", function () {
+          if (confirm("Bu vazifani o'chirishni istaysizmi?")) {
+            tasks = tasks.filter((task) => task.id !== taskId);
+            renderTasks();
+            updateStats();
+            scheduleAutoSave(); // Avtomatik saqlash
+          }
+        });
+
+        editBtn.addEventListener("click", function () {
+          const taskIndex = tasks.findIndex((task) => task.id === taskId);
+          if (taskIndex !== -1) {
+            const newText = prompt(
+              "Vazifani tahrirlang:",
+              tasks[taskIndex].text
+            );
+            if (newText !== null && newText.trim() !== "") {
+              tasks[taskIndex].text = newText;
+              taskText.textContent = newText;
+              scheduleAutoSave(); // Avtomatik saqlash
+            }
+          }
+        });
+
+        timerBtn.addEventListener("click", function () {
+          // Vazifa uchun taymerni sozlash
+          timerSeconds = duration * 60;
+          updateTimerDisplay();
+
+          // Agar taymer ishlamayotgan bo'lsa, boshlash
+          if (!timerRunning) {
+            startTimer();
+          }
+        });
+      }
+
+      // Ish kuni boshlanishi
+      document
+        .getElementById("startWorkday")
+        .addEventListener("click", function () {
+          workdayStartTime = new Date();
+          alert(
+            `Ish kuni boshladi: ${workdayStartTime.toLocaleTimeString("uz-UZ")}`
+          );
+          scheduleAutoSave(); // Avtomatik saqlash
+        });
+
+      // Ish kuni tugashi
+      document
+        .getElementById("endWorkday")
+        .addEventListener("click", function () {
+          if (!workdayStartTime) {
+            alert("Ish kuni boshlanish vaqti belgilanmagan!");
+            return;
+          }
+
+          workdayEndTime = new Date();
+          const diffMs = workdayEndTime - workdayStartTime;
+          const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+          const diffMins = Math.floor(
+            (diffMs % (1000 * 60 * 60)) / (1000 * 60)
+          );
+
+          alert(
+            `Ish kuni tugadi. Ish vaqti: ${diffHrs} soat ${diffMins} daqiqa`
+          );
+          scheduleAutoSave(); // Avtomatik saqlash
+        });
+
+      // Statistikani yangilash
+      function updateStats() {
+        const totalTasks = tasks.length;
+        const completedTasks = tasks.filter((task) => task.completed).length;
+
+        // Jami vaqtni hisoblash
+        let totalTime = 0;
+        tasks.forEach((task) => {
+          totalTime += task.duration;
+        });
+
+        // Samaradorlikni hisoblash
+        const productivity =
+          totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+        document.getElementById("totalTasks").textContent = totalTasks;
+        document.getElementById("completedTasks").textContent = completedTasks;
+        document.getElementById("totalTime").textContent = totalTime;
+        document.getElementById(
+          "productivityScore"
+        ).textContent = `${productivity}%`;
+      }
+
+      // Ma'lumotlarni yuklash
+      function loadData() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+
+        if (savedData) {
+          try {
+            const data = JSON.parse(savedData);
+            tasks = data.tasks || [];
+            workdayStartTime = data.workdayStartTime;
+            workdayEndTime = data.workdayEndTime;
+
+            console.log("Ma'lumotlar muvaffaqiyatli yuklandi");
+          } catch (error) {
+            console.error("Ma'lumotlarni yuklashda xatolik:", error);
+          }
+        } else {
+          // Agar saqlangan ma'lumotlar bo'lmasa, bo'sh ro'yxat
+          tasks = [];
+        }
+      }
+
+      // Ma'lumotlarni eksport qilish
+      document
+        .getElementById("exportDataBtn")
+        .addEventListener("click", function () {
+          const dataStr = JSON.stringify(
+            {
+              tasks: tasks,
+              workdayStartTime: workdayStartTime,
+              workdayEndTime: workdayEndTime,
+              exportedAt: new Date().toISOString(),
+            },
+            null,
+            2
+          );
+
+          const blob = new Blob([dataStr], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `kundalik-reja-${
+            new Date().toISOString().split("T")[0]
+          }.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          alert("Ma'lumotlar eksport qilindi!");
+        });
+
+      // Ma'lumotlarni import qilish
+      document
+        .getElementById("importDataBtn")
+        .addEventListener("click", function () {
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = ".json";
+
+          input.onchange = function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              try {
+                const importedData = JSON.parse(event.target.result);
+
+                if (
+                  confirm(
+                    "Import qilish joriy ma'lumotlarni o'chiradi. Davom etasizmi?"
+                  )
+                ) {
+                  tasks = importedData.tasks || [];
+                  workdayStartTime = importedData.workdayStartTime;
+                  workdayEndTime = importedData.workdayEndTime;
+
+                  renderTasks();
+                  updateStats();
+                  autoSaveData();
+
+                  alert("Ma'lumotlar muvaffaqiyatli import qilindi!");
+                }
+              } catch (error) {
+                alert(
+                  "Faylni o'qishda xatolik yuz berdi. Iltimos, to'g'ri formatdagi fayl tanlang."
+                );
+              }
+            };
+
+            reader.readAsText(file);
+          };
+
+          input.click();
+        });
+
+      // Barcha ma'lumotlarni o'chirish
+      document
+        .getElementById("clearDataBtn")
+        .addEventListener("click", function () {
+          if (
+            confirm(
+              "Barcha ma'lumotlarni o'chirishni istaysizmi? Bu amalni ortga qaytarib bo'lmaydi."
+            )
+          ) {
+            localStorage.removeItem(STORAGE_KEY);
+            tasks = [];
+            workdayStartTime = null;
+            workdayEndTime = null;
+            renderTasks();
+            updateStats();
+            alert("Barcha ma'lumotlar o'chirildi.");
+          }
+        });
+
+      // Taymer kontrol elementlari
+      document
+        .getElementById("startTimer")
+        .addEventListener("click", startTimer);
+      document
+        .getElementById("pauseTimer")
+        .addEventListener("click", pauseTimer);
+      document
+        .getElementById("resetTimer")
+        .addEventListener("click", resetTimer);
+
+      // Vaqtni yangilash
+      setInterval(updateDateTime, 1000);
+    </script>
+  </body>
+</html>
