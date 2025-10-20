@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VTime Manager</title>
+    <title>Time Manager</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -475,7 +475,7 @@
   <body>
     <div class="container">
       <header>
-        <h1><i class="fas fa-clock"></i> Vaqt Boshqaruvli Kundalik Reja</h1>
+        <h1><i class="fas fa-clock"></i>Order Your Day</h1>
         <div class="date-display" id="currentDate">
           2023 yil 11 noyabr, payshanba
         </div>
@@ -492,9 +492,11 @@
           <div class="time-display" id="currentTime">00:00:00</div>
           <div class="time-controls">
             <button class="time-btn" id="startWorkday">
-              Ish kuni boshlanishi
+              Ish rejasini boshlanishi
             </button>
-            <button class="time-btn" id="endWorkday">Ish kuni tugashi</button>
+            <button class="time-btn" id="endWorkday">
+              Ish rejasini tugashi
+            </button>
           </div>
         </div>
 
@@ -523,11 +525,11 @@
             placeholder="Yangi vazifa qo'shing..."
             required
           />
-          <select class="priority-select" id="prioritySelect">
+          <!-- <select class="priority-select" id="prioritySelect">
             <option value="low">Past</option>
             <option value="medium">O'rta</option>
             <option value="high">Yuqori</option>
-          </select>
+          </select> -->
           <select class="duration-select" id="durationSelect">
             <option value="15">15 daqiqa</option>
             <option value="25">25 daqiqa</option>
@@ -535,6 +537,7 @@
             <option value="60">1 soat</option>
             <option value="90">1.5 soat</option>
             <option value="120">2 soat</option>
+            <option value="150">2.3</option>
           </select>
           <button type="submit" class="add-btn">
             <i class="fas fa-plus"></i> Qo'shish
@@ -558,7 +561,7 @@
         </div>
       </div>
 
-      <div class="data-controls">
+      <!-- <div class="data-controls">
         <button class="data-btn" id="exportDataBtn">
           <i class="fas fa-file-export"></i> Eksport qilish
         </button>
@@ -568,7 +571,7 @@
         <button class="data-btn" id="clearDataBtn">
           <i class="fas fa-trash"></i> Barchasini O'chirish
         </button>
-      </div>
+      </div> -->
 
       <div class="stats-section">
         <div class="stat-item">
